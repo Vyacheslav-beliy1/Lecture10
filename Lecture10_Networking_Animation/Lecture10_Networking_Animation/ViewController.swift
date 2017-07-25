@@ -112,6 +112,105 @@ class ViewController: UIViewController {
         
     }
     
+    
+    
+    
+    
+    @IBOutlet weak var animatingView: UIView!
+    
+    @IBOutlet weak var animatingViewLabel: UILabel!
+    
+    @IBAction func animation1(_ sender: Any) {
+        
+        UIView.animate(withDuration: 2.0,
+                       animations: {self.animatingView.alpha = 0}) { isFinished in
+                        if isFinished
+                        {
+                            UIView.animate(withDuration: 2.0) {
+                                self.animatingView.alpha = 1.0
+                            }
+                        }
+        }
+        
+        
+    }
+    
+    @IBAction func animatino2(_ sender: Any) {
+        
+        let oldFrame = animatingView.frame
+        
+        
+        
+        
+        UIView.animate(withDuration: 4.0,
+                       delay: 0.5,
+                       options: [.curveEaseInOut],
+                       animations: {
+                        let newFrame = CGRect(x: 20, y: 20, width: 60, height: 30)
+                        self.animatingView.frame = newFrame
+                        }) { isFinished in
+                            if isFinished
+                            {
+                                UIView.animate(withDuration: 4.0) {
+                                    self.animatingView.frame = oldFrame
+                                }
+                            }
+                           }
+    }
+    
+    @IBAction func animation3(_ sender: Any) {
+        
+        UIView.transition(with: animatingView,
+                          duration: 2.0,
+                          options: [.transitionFlipFromLeft],
+                          animations: { 
+                            self.animatingViewLabel.isHidden = !self.animatingViewLabel.isHidden
+        },
+                          completion: nil)
+        
+    }
+    
+    @IBAction func animation4(_ sender: Any) {
+       
+        let newView = UIView(frame: CGRect(x: 30, y: 30, width: 40, height: 40))
+        newView.backgroundColor = UIColor.green
+        view.addSubview(newView)
+        
+        let item:UIDynamicItem = newView
+        
+        gravity.addItem(item)
+        colision.addItem(item)
+        itemBehaviour.addItem(item)
+    }
+    
+    var animator: UIDynamicAnimator!
+    var gravity: UIGravityBehavior!
+    var colision: UICollisionBehavior!
+    var itemBehaviour: UIDynamicItemBehavior!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        animator = UIDynamicAnimator(referenceView: self.view)
+        
+        gravity = UIGravityBehavior()
+        colision = UICollisionBehavior()
+        itemBehaviour = UIDynamicItemBehavior()
+        
+        colision.translatesReferenceBoundsIntoBoundary = true
+        colision.collisionMode = .everything
+        
+        itemBehaviour.allowsRotation = true
+        itemBehaviour.elasticity = 0.9
+        itemBehaviour.friction = 0.5
+
+        animator.addBehavior(gravity)
+        animator.addBehavior(colision)
+        animator.addBehavior(itemBehaviour)
+        
+        
+    }
+    
 }
 
 
